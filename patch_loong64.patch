@@ -1,8 +1,20 @@
 diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
-index 6545774..479864f 100644
+index 6545774..e09b9de 100644
 --- a/.github/workflows/ci.yml
 +++ b/.github/workflows/ci.yml
-@@ -257,6 +257,12 @@ jobs:
+@@ -1,7 +1,9 @@
+ name: CI
+ on:
+-  - push
+-  - pull_request
++  push:
++    tags:
++      - 'v*'
++  pull_request:
+ permissions: {}
+ jobs:
+   lint:
+@@ -257,6 +259,12 @@ jobs:
              nodejs_hostname: unofficial-builds.nodejs.org
              nodejs_version: "22.22.3"
              nodejs_version_major: 22
@@ -15,7 +27,7 @@ index 6545774..479864f 100644
            - platform: linux-s390x
              base_image: "--platform=linux/s390x s390x/debian:bookworm"
              nodejs_arch: s390x
-@@ -328,7 +334,7 @@ jobs:
+@@ -328,7 +336,7 @@ jobs:
        - run: npm run build:dist && emmake npm run build
        - name: Verify emscripten versions match
          run: |
@@ -24,7 +36,7 @@ index 6545774..479864f 100644
            EMSCRIPTEN_VERSION_SHARP=$(emcc -dumpversion)
            echo "libvips built with emscripten $EMSCRIPTEN_VERSION_LIBVIPS"
            echo "sharp built with emscripten $EMSCRIPTEN_VERSION_SHARP"
-@@ -359,6 +365,15 @@ jobs:
+@@ -359,6 +367,15 @@ jobs:
        - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
          with:
            path: npm
@@ -40,7 +52,7 @@ index 6545774..479864f 100644
        - name: Create npm workspace tarball
          run: tar -vcaf npm-workspace.tar.xz --directory npm --exclude=from-local-build.js .
        - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-@@ -385,4 +400,4 @@ jobs:
+@@ -385,4 +402,4 @@ jobs:
          run: cd npm && npm publish --workspaces --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }}
        - name: Publish sharp npm package
          if: startsWith(github.ref, 'refs/tags/v')
