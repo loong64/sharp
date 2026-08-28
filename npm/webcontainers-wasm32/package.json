@@ -35,7 +35,7 @@
     }
   },
   "dependencies": {
-    "@img/sharp-wasm32": "0.35.0"
+    "@img-loong64/sharp-wasm32": "0.35.0"
   },
   "engines": {
     "node": ">=20.9.0"
