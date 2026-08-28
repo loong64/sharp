@@ -62,7 +62,7 @@ jobs:
           SHARP_VERSION=$(jq -r '.optionalDependencies["@img/sharp-linux-arm64"]' package.json)
           sed -i "/\"@img\/sharp-libvips-linux-arm64\":/a\\    \"@img/sharp-libvips-linux-loong64\": \"${SHARP_LIBVIPS_VERSION}\"," package.json
           sed -i "/\"@img\/sharp-linux-arm64\":/a\\    \"@img/sharp-linux-loong64\": \"${SHARP_VERSION}\"," package.json
-          sed -i 's#@img/sharp-#@img-loong64/sharp-#g' package.json lib/libvips.mjs lib/sharp.mjs lib/utility.mjs src/binding.gyp
+          sed -i 's#@img/sharp-#@img-loong64/sharp-#g' package.json npm/from-local-build.js lib/libvips.mjs lib/sharp.mjs lib/utility.mjs src/binding.gyp
           find npm/ -type f -name package.json -exec sed -i 's#@img/sharp-#@img-loong64/sharp-#g' {} \;
           git add .
           git commit -m "feat: add loongarch64 platform support"
