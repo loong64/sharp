@@ -34,7 +34,7 @@ cpSync(releaseDir, libDir, {
 const { version, name, description } = require(`./${platform}/package.json`);
 writeFileSync(join(destDir, 'README.md'), `# \`${name}\`\n\n${description}.\n\n${licensing}`);
 const resolveLibvipsBinary = (platform.startsWith('darwin') || platform.startsWith('linux'))
-  ? `try { require.resolve('@img/sharp-libvips-${platform}/binary'); } catch {}\n`
+  ? `try { require.resolve('@img-loong64/sharp-libvips-${platform}/binary'); } catch {}\n`
   : '';
 writeFileSync(join(destDir, 'index.cjs'), `${resolveLibvipsBinary}module.exports = require('./lib/sharp-${platform}-${version}.node');`);
 
@@ -44,7 +44,7 @@ copyFileSync(join(__dirname, '..', 'LICENSE'), join(destDir, 'LICENSE'));
 // Copy files for packages without an explicit sharp-libvips dependency (Windows, wasm)
 if (platform.startsWith('win') || platform.startsWith('wasm')) {
   const libvipsPlatform = platform === 'wasm32' ? 'dev-wasm32' : platform;
-  const sharpLibvipsDir = join(require(`@img/sharp-libvips-${libvipsPlatform}/lib`), '..');
+  const sharpLibvipsDir = join(require(`@img-loong64/sharp-libvips-${libvipsPlatform}/lib`), '..');
   // Copy versions.json
   copyFileSync(join(sharpLibvipsDir, 'versions.json'), join(destDir, 'versions.json'));
   // Append third party licensing to README

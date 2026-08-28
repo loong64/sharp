@@ -1,5 +1,5 @@
 {
-  "name": "@img/sharp-linux-arm",
+  "name": "@img-loong64/sharp-linux-arm",
   "version": "0.35.4",
   "description": "Prebuilt sharp for use with Linux (glibc) ARM (32-bit)",
   "author": "Lovell Fuller <npm@lovell.info>",
@@ -15,7 +15,7 @@
   },
   "preferUnplugged": true,
   "optionalDependencies": {
-    "@img/sharp-libvips-linux-arm": "1.3.3"
+    "@img-loong64/sharp-libvips-linux-arm": "1.3.3"
   },
   "files": [
     "index.cjs",
