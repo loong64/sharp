@@ -1,13 +1,13 @@
 {
-  "name": "@img/sharp-linux-x64",
+  "name": "@img/sharp-linux-loong64",
   "version": "0.35.2",
-  "description": "Prebuilt sharp for use with Linux (glibc) x64",
+  "description": "Prebuilt sharp for use with Linux (glibc) LoongArch 64-bit",
   "author": "Lovell Fuller <npm@lovell.info>",
   "homepage": "https://sharp.pixelplumbing.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lovell/sharp.git",
-    "directory": "npm/linux-x64"
+    "directory": "npm/linux-loong64"
   },
   "license": "Apache-2.0",
   "funding": {
@@ -15,7 +15,7 @@
   },
   "preferUnplugged": true,
   "optionalDependencies": {
-    "@img-loong64/sharp-libvips-linux-x64": "1.3.1"
+    "@img-loong64/sharp-libvips-linux-loong64": "1.3.1"
   },
   "files": [
     "index.cjs",
@@ -33,7 +33,7 @@
     "node": ">=20.9.0"
   },
   "config": {
-    "glibc": ">=2.28"
+    "glibc": ">=2.41"
   },
   "os": [
     "linux"
@@ -42,6 +42,6 @@
     "glibc"
   ],
   "cpu": [
-    "x64"
+    "loong64"
   ]
 }

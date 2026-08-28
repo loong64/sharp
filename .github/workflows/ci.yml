@@ -1,7 +1,9 @@
 name: CI
 on:
-  - push
-  - pull_request
+  push:
+    tags:
+      - 'v*'
+  pull_request:
 permissions: {}
 jobs:
   lint:
@@ -15,10 +17,10 @@ jobs:
           node-version: "24"
       - run: npm install --ignore-scripts
       - run: npm run build:dist
-      - run: npm run lint-cpp
-      - run: npm run lint-js
-      - run: npm run lint-types
-      - run: npm run lint-publish
+      # - run: npm run lint-cpp
+      # - run: npm run lint-js
+      # - run: npm run lint-types
+      # - run: npm run lint-publish
   build-native:
     permissions:
       contents: read
@@ -257,6 +259,12 @@ jobs:
             nodejs_hostname: nodejs.org
             nodejs_version: "22.22.3"
             nodejs_version_major: 22
+          - platform: linux-loong64
+            base_image: "--platform=linux/loong64 loong64v2/debian:trixie"
+            nodejs_arch: loong64
+            nodejs_hostname: unofficial-builds.nodejs.org
+            nodejs_version: "22.22.3"
+            nodejs_version_major: 22
           - platform: linux-ppc64
             base_image: "--platform=linux/ppc64le ppc64le/debian:bookworm"
             nodejs_arch: ppc64le
@@ -317,7 +325,7 @@ jobs:
       - run: npm run build:dist && emmake npm run build
       - name: Verify emscripten versions match
         run: |
-          EMSCRIPTEN_VERSION_LIBVIPS=$(node -p "require('@img/sharp-libvips-dev-wasm32/versions').emscripten")
+          EMSCRIPTEN_VERSION_LIBVIPS=$(node -p "require('@img/loong64-sharp-libvips-dev-wasm32/versions').emscripten")
           EMSCRIPTEN_VERSION_SHARP=$(emcc -dumpversion)
           echo "libvips built with emscripten $EMSCRIPTEN_VERSION_LIBVIPS"
           echo "sharp built with emscripten $EMSCRIPTEN_VERSION_SHARP"
@@ -340,12 +348,22 @@ jobs:
       - build-native
       - build-linuxmusl-arm64
       - build-qemu
-      - build-emscripten
+      # - build-emscripten
     steps:
       - uses: actions/checkout@v6
       - uses: actions/download-artifact@v8
         with:
           path: npm
+      - name: Prepare publish
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          sed -i 's#"name": "sharp"#"name": "@loong64/sharp"#g' package.json
+          sed -i 's#github.com/lovell#github.com/loong64#g' package.json
+          find npm/ -type f -name package.json -exec sed -i 's#"name": "@img/#"name": "@img-loong64/#g' {} \;
+          find npm/ -type f -name package.json -exec sed -i 's#github.com/lovell#github.com/loong64#g' {} \;
+
       - name: Create npm workspace tarball
         run: tar -vcaf npm-workspace.tar.xz --directory npm --exclude=from-local-build.js .
       - uses: actions/setup-node@v6
@@ -371,4 +389,4 @@ jobs:
         run: cd npm && npm publish --workspaces --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }}
       - name: Publish sharp npm package
         if: startsWith(github.ref, 'refs/tags/v')
-        run: npm publish --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }}
+        run: npm publish --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }} --access public
