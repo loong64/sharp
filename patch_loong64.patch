@@ -1,0 +1,73 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 6545774..479864f 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -257,6 +257,12 @@ jobs:
+             nodejs_hostname: unofficial-builds.nodejs.org
+             nodejs_version: "22.22.3"
+             nodejs_version_major: 22
++          - platform: linux-loong64
++            base_image: "--platform=linux/loong64 loong64v2/debian:trixie"
++            nodejs_arch: loong64
++            nodejs_hostname: unofficial-builds.nodejs.org
++            nodejs_version: "22.22.3"
++            nodejs_version_major: 22
+           - platform: linux-s390x
+             base_image: "--platform=linux/s390x s390x/debian:bookworm"
+             nodejs_arch: s390x
+@@ -328,7 +334,7 @@ jobs:
+       - run: npm run build:dist && emmake npm run build
+       - name: Verify emscripten versions match
+         run: |
+-          EMSCRIPTEN_VERSION_LIBVIPS=$(node -p "require('@img/sharp-libvips-dev-wasm32/versions').emscripten")
++          EMSCRIPTEN_VERSION_LIBVIPS=$(node -p "require('@img-loong64/sharp-libvips-dev-wasm32/versions').emscripten")
+           EMSCRIPTEN_VERSION_SHARP=$(emcc -dumpversion)
+           echo "libvips built with emscripten $EMSCRIPTEN_VERSION_LIBVIPS"
+           echo "sharp built with emscripten $EMSCRIPTEN_VERSION_SHARP"
+@@ -359,6 +365,15 @@ jobs:
+       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+         with:
+           path: npm
++      - name: Prepare publish
++        env:
++          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
++        run: |
++          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
++          sed -i 's#"name": "sharp"#"name": "@loong64/sharp"#g' package.json
++          sed -i 's#github.com/lovell#github.com/loong64#g' package.json
++          find npm/ -type f -name package.json -exec sed -i 's#"name": "@img/#"name": "@img-loong64/#g' {} \;
++          find npm/ -type f -name package.json -exec sed -i 's#github.com/lovell#github.com/loong64#g' {} \;
+       - name: Create npm workspace tarball
+         run: tar -vcaf npm-workspace.tar.xz --directory npm --exclude=from-local-build.js .
+       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+@@ -385,4 +400,4 @@ jobs:
+         run: cd npm && npm publish --workspaces --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }}
+       - name: Publish sharp npm package
+         if: startsWith(github.ref, 'refs/tags/v')
+-        run: npm publish --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }}
++        run: npm publish --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }} --access public
+diff --git a/lib/libvips.mjs b/lib/libvips.mjs
+index 35608ac3..17429eba 100644
+--- a/lib/libvips.mjs
++++ b/lib/libvips.mjs
+@@ -17,7 +17,7 @@ const prebuiltPlatforms = [
+   'darwin-arm64', 'darwin-x64',
+   'freebsd-arm64', 'freebsd-x64',
+   'linux-arm', 'linux-arm64', 'linux-ppc64', 'linux-riscv64', 'linux-s390x', 'linux-wasm32', 'linux-x64',
+-  'linuxmusl-arm64', 'linuxmusl-x64',
++  'linuxmusl-arm64', 'linuxmusl-x64', 'linux-loong64',
+   'win32-arm64', 'win32-ia32', 'win32-x64'
+ ];
+ 
+diff --git a/npm/package.json b/npm/package.json
+index 8b9619e3..f6c497dc 100644
+--- a/npm/package.json
++++ b/npm/package.json
+@@ -8,6 +8,7 @@
+     "freebsd-wasm32",
+     "linux-arm",
+     "linux-arm64",
++    "linux-loong64",
+     "linux-ppc64",
+     "linux-riscv64",
+     "linux-s390x",
