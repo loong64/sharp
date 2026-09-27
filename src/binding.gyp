@@ -6,7 +6,7 @@
     'vips_version': '<!(node -p "require(\'../dist/libvips.cjs\').minimumLibvipsVersion")',
     'platform_and_arch': '<!(node -p "require(\'../dist/libvips.cjs\').buildPlatformArch()")',
     'sharp_version': '<!(node -p "require(\'../package.json\').version")',
-    'sharp_libvips_version': '<!(node -p "require(\'../package.json\').optionalDependencies[\'@img/sharp-libvips-<(platform_and_arch)\']")',
+    'sharp_libvips_version': '<!(node -p "require(\'../package.json\').optionalDependencies[\'@img-loong64/sharp-libvips-<(platform_and_arch)\']")',
     'sharp_libvips_yarn_locator': '<!(node -p "require(\'../dist/libvips.cjs\').yarnLocator()")',
     'sharp_libvips_include_dir': '<!(node -p "require(\'../dist/libvips.cjs\').buildSharpLibvipsIncludeDir()")',
     'sharp_libvips_cplusplus_dir': '<!(node -p "require(\'../dist/libvips.cjs\').buildSharpLibvipsCPlusPlusDir()")',
@@ -171,10 +171,10 @@
                 # Ensure runtime linking is relative to sharp.node
                 '-Wl,-rpath,\'@loader_path/../../sharp-libvips-<(platform_and_arch)/lib\'',
                 '-Wl,-rpath,\'@loader_path/../../../sharp-libvips-<(platform_and_arch)/<(sharp_libvips_version)/lib\'',
-                '-Wl,-rpath,\'@loader_path/../node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\'',
-                '-Wl,-rpath,\'@loader_path/../../node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\'',
-                '-Wl,-rpath,\'@loader_path/../../../node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\'',
-                '-Wl,-rpath,\'@loader_path/../../../../../@img-sharp-libvips-<(platform_and_arch)-npm-<(sharp_libvips_version)-<(sharp_libvips_yarn_locator)/node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\''
+                '-Wl,-rpath,\'@loader_path/../node_modules/@img-loong64/sharp-libvips-<(platform_and_arch)/lib\'',
+                '-Wl,-rpath,\'@loader_path/../../node_modules/@img-loong64/sharp-libvips-<(platform_and_arch)/lib\'',
+                '-Wl,-rpath,\'@loader_path/../../../node_modules/@img-loong64/sharp-libvips-<(platform_and_arch)/lib\'',
+                '-Wl,-rpath,\'@loader_path/../../../../../@img-sharp-libvips-<(platform_and_arch)-npm-<(sharp_libvips_version)-<(sharp_libvips_yarn_locator)/node_modules/@img-loong64/sharp-libvips-<(platform_and_arch)/lib\''
               ]
             }
           }],
@@ -197,9 +197,9 @@
                 '-Wl,-Bsymbolic-functions',
                 '-Wl,-rpath=\'$$ORIGIN/../../sharp-libvips-<(platform_and_arch)/lib\'',
                 '-Wl,-rpath=\'$$ORIGIN/../../../sharp-libvips-<(platform_and_arch)/<(sharp_libvips_version)/lib\'',
-                '-Wl,-rpath=\'$$ORIGIN/../../node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\'',
-                '-Wl,-rpath=\'$$ORIGIN/../../../node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\'',
-                '-Wl,-rpath,\'$$ORIGIN/../../../../../@img-sharp-libvips-<(platform_and_arch)-npm-<(sharp_libvips_version)-<(sharp_libvips_yarn_locator)/node_modules/@img/sharp-libvips-<(platform_and_arch)/lib\''
+                '-Wl,-rpath=\'$$ORIGIN/../../node_modules/@img-loong64/sharp-libvips-<(platform_and_arch)/lib\'',
+                '-Wl,-rpath=\'$$ORIGIN/../../../node_modules/@img-loong64/sharp-libvips-<(platform_and_arch)/lib\'',
+                '-Wl,-rpath,\'$$ORIGIN/../../../../../@img-sharp-libvips-<(platform_and_arch)-npm-<(sharp_libvips_version)-<(sharp_libvips_yarn_locator)/node_modules/@img-loong64/sharp-libvips-<(platform_and_arch)/lib\''
               ]
             }
           }],
@@ -219,7 +219,7 @@
                 '-sWASM_ASYNC_COMPILATION=0'
               ],
               'libraries': [
-                '<!@(PKG_CONFIG_PATH="<!(node -p "require(\'@img/sharp-libvips-dev-wasm32/lib\')")/pkgconfig" pkg-config --static --libs vips-cpp)'
+                '<!@(PKG_CONFIG_PATH="<!(node -p "require(\'@img-loong64/sharp-libvips-dev-wasm32/lib\')")/pkgconfig" pkg-config --static --libs vips-cpp)'
               ],
             }
           }]
